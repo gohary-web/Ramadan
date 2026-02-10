@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سبحه إلكترونيه 🥹</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            touch-action: manipulation; /* لمنع الزووم عند الضغط المتكرر */
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* حلقة التسبيح */
+        .ring-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tasbih-circle {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: radial-gradient(circle, #111 0%, #050505 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .tasbih-circle:active {
+            transform: scale(0.96);
+            border-color: #d4af37;
+        }
+
+        /* تأثير التوهج الذهبي */
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37 !important;
+        }
+
+        /* أزرار التحكم السفلية */
+        .control-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .control-btn:hover {
+            background: #222;
+            border-color: #d4af37;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="mb-10">
+            <h1 class="text-[#d4af37] text-sm tracking-[0.2em] mb-2 uppercase font-light">رمضان مبارك</h1>
+            <p id="dhikr-display" class="text-2xl font-medium text-gray-200">سبحان الله</p>
+        </div>
+
+        <div class="ring-container">
+            <div id="main-tap" class="tasbih-circle">
+                <span id="counter" class="text-7xl font-light tracking-tighter text-white">0</span>
+                <span class="text-xs text-[#d4af37] mt-2 tracking-widest uppercase">اضغط للتسبيح</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <div class="bg-[#111] p-3 rounded-2xl border border-white/5">
+                <span class="block text-[10px] text-gray-500 mb-1">الإجمالي</span>
+                <span id="total-count" class="text-lg font-bold text-gray-300">0</span>
+            </div>
+            <div class="bg-[#111] p-3 rounded-2xl border border-white/5">
+                <span class="block text-[10px] text-gray-500 mb-1">الدورات</span>
+                <span id="laps-count" class="text-lg font-bold text-gray-300">0</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <button onclick="changeDhikr()" class="control-btn text-gray-300">الذكر التالي</button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="resetCounter()" class="control-btn text-red-400/80">تصفير</button>
+                <button onclick="toggleSound()" id="sound-toggle" class="control-btn text-gray-300">صوت: ON</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="click-sfx" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script>
+        let count = 0;
+        let total = parseInt(localStorage.getItem('tasbih_total')) || 0;
+        let isSoundOn = true;
+        const dhikrs = ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "أستغفر الله"];
+        let dhikrIdx = 0;
+
+        const mainBtn = document.getElementById('main-tap');
+        const counterDisplay = document.getElementById('counter');
+        const totalDisplay = document.getElementById('total-count');
+        const lapsDisplay = document.getElementById('laps-count');
+        const dhikrDisplay = document.getElementById('dhikr-display');
+        const sfx = document.getElementById('click-sfx');
+
+        // تهيئة البيانات
+        totalDisplay.innerText = total;
+        lapsDisplay.innerText = Math.floor(total / 33);
+
+        mainBtn.addEventListener('click', () => {
+            count++;
+            total++;
+            
+            // تحديث الواجهة
+            counterDisplay.innerText = count;
+            totalDisplay.innerText = total;
+            lapsDisplay.innerText = Math.floor(total / 33);
+            
+            // تخزين
+            localStorage.setItem('tasbih_total', total);
+
+            // الاهتزاز (Haptic Feedback)
+            if ("vibrate" in navigator) {
+                navigator.vibrate(50); // اهتزاز قصير وذكي
+            }
+
+            // الصوت
+            if (isSoundOn) {
+                sfx.currentTime = 0;
+                sfx.play();
+            }
+
+            // تمييز عند الرقم 33
+            if (count % 33 === 0) {
+                mainBtn.classList.add('gold-glow');
+                setTimeout(() => mainBtn.classList.remove('gold-glow'), 300);
+            }
+        });
+
+        function changeDhikr() {
+            dhikrIdx = (dhikrIdx + 1) % dhikrs.length;
+            dhikrDisplay.innerText = dhikrs[dhikrIdx];
+            count = 0;
+            counterDisplay.innerText = 0;
+        }
+
+        function resetCounter() {
+            if(confirm("هل تريد تصفير العداد؟")) {
+                count = 0;
+                total = 0;
+                localStorage.setItem('tasbih_total', 0);
+                counterDisplay.innerText = 0;
+                totalDisplay.innerText = 0;
+                lapsDisplay.innerText = 0;
+            }
+        }
+
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            document.getElementById('sound-toggle').innerText = isSoundOn ? "صوت: ON" : "صوت: OFF";
+        }
+    </script>
+</body>
+</html>
