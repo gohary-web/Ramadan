@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>رمضان 2026 🌙 | سبحة التسبيح</title>
     <meta name="theme-color" content="#d4af37">
-    <meta name="description" content="سبحة إلكترونية مع مواقيت الصلاة وإشعارات رمضان">
     
     <!-- OneSignal SDK -->
     <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
@@ -64,117 +63,49 @@
             background: linear-gradient(145deg, #b8860b20, #d4af3710);
             border: 1px solid #d4af3740;
             border-radius: 30px;
-            padding: 1rem;
+            padding: 1.2rem;
             margin-bottom: 1.5rem;
-            backdrop-filter: blur(5px);
         }
 
-        .date-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .date-card {
-            background: #00000030;
-            border: 1px solid #d4af3722;
-            border-radius: 20px;
-            padding: 1rem;
-        }
-
-        .date-label {
-            font-size: 0.7rem;
+        .date-main {
+            font-size: 2.2rem;
+            font-weight: 900;
             color: #d4af37;
-            opacity: 0.8;
-            margin-bottom: 0.3rem;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
         }
 
-        .date-value {
+        .date-details {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .ramadan-countdown {
+            background: #00000040;
+            border-radius: 50px;
+            padding: 0.7rem;
+            margin-top: 0.8rem;
+            border: 1px solid #d4af3722;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .countdown-number {
             font-size: 1.8rem;
             font-weight: 900;
-            color: white;
-            line-height: 1;
-        }
-
-        .date-unit {
-            font-size: 0.8rem;
-            color: #888;
-            margin-right: 0.2rem;
-        }
-        
-        .ring-container { 
-            position: relative; 
-            width: 260px; 
-            height: 260px; 
-            margin: 1.5rem auto; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        
-        .tasbih-circle { 
-            width: 100%; 
-            height: 100%; 
-            border: 3px solid #b8860b; 
-            border-radius: 50%; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); 
-            background: radial-gradient(circle at 30% 30%, #1a1a1a, #000000); 
-            box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2); 
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tasbih-circle:active { 
-            transform: scale(0.94); 
-            border-color: #ffd700; 
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-        }
-        
-        .gold-glow { 
-            box-shadow: 0 0 40px #ffd700, 0 0 60px #b8860b; 
-            border-color: #ffd700 !important; 
-            transition: all 0.2s;
-        }
-        
-        .control-btn { 
-            background: #1a1a1a; 
-            border: 1px solid #333; 
-            padding: 0.9rem; 
-            border-radius: 16px; 
-            font-size: 0.95rem; 
-            font-weight: 500;
-            transition: all 0.2s; 
-            width: 100%; 
-            cursor: pointer;
-            color: #fff;
-        }
-        
-        .control-btn:active {
-            transform: scale(0.96);
-            background: #2a2a2a;
-            border-color: #d4af37;
-        }
-        
-        .info-card { 
-            background: linear-gradient(145deg, #161616, #0d0d0d); 
-            border: 1px solid #d4af3740; 
-            border-radius: 20px; 
-            padding: 15px; 
-            margin-bottom: 10px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            color: #d4af37;
         }
 
         .prayer-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
+            padding: 10px 15px;
             background: rgba(0,0,0,0.3);
             border-radius: 30px;
             margin-bottom: 6px;
@@ -184,25 +115,31 @@
         .prayer-name {
             font-weight: bold;
             color: #d4af37;
+            font-size: 1rem;
         }
 
         .prayer-time {
             font-family: monospace;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             direction: ltr;
+            background: #00000040;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #d4af3733;
         }
 
         .test-notif-btn {
             background: #2a2a2a;
             border: 1px dashed #d4af37;
             color: #d4af37;
-            padding: 12px;
+            padding: 15px;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: all 0.3s;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            margin: 10px 0;
+            font-weight: bold;
         }
 
         .test-notif-btn:active {
@@ -210,164 +147,178 @@
             transform: scale(0.96);
         }
 
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 12px;
+        .notif-success {
+            background: #22c55e20;
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 10px;
             border-radius: 50px;
-            font-size: 0.75rem;
-            background: #1a1a1a;
-            border: 1px solid #333;
+            font-size: 0.9rem;
+            margin-top: 10px;
         }
 
-        .today-hijri {
-            font-size: 0.9rem;
-            color: #d4af37;
-            background: #00000040;
-            padding: 5px 15px;
+        .notif-error {
+            background: #ef444420;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 10px;
             border-radius: 50px;
-            display: inline-block;
-            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .tasbih-circle { 
+            width: 260px; 
+            height: 260px; 
+            border: 3px solid #b8860b; 
+            border-radius: 50%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: all 0.15s; 
+            background: radial-gradient(circle at 30% 30%, #1a1a1a, #000000); 
+            margin: 1.5rem auto;
+        }
+        
+        .tasbih-circle:active { 
+            transform: scale(0.94); 
+            border-color: #ffd700; 
+            box-shadow: 0 0 40px #ffd700;
+        }
+        
+        .control-btn { 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            padding: 1rem; 
+            border-radius: 16px; 
+            font-size: 1rem; 
+            font-weight: 500;
+            transition: all 0.2s; 
+            width: 100%; 
+            cursor: pointer;
+            color: #fff;
+        }
+        
+        .control-btn:active {
+            background: #2a2a2a;
+            border-color: #d4af37;
+        }
+
+        #notif-status {
+            background: #00000080;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 15px;
+            border-radius: 50px;
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <!-- رأس رمضان الجديد - تاريخ وعد تنازلي -->
+        <!-- رأس الصفحة - التاريخ والعد التنازلي -->
         <div class="ramadan-header">
-            <div class="today-hijri" id="hijri-date">رمضان 1447 هـ</div>
-            
-            <div class="date-grid">
-                <!-- اليوم والتاريخ الميلادي -->
-                <div class="date-card">
-                    <div class="date-label">📅 اليوم</div>
-                    <div class="date-value" id="gregorian-day">26</div>
-                    <div class="date-unit" id="gregorian-month">فبراير</div>
-                </div>
-                
-                <!-- كم تبقى على رمضان -->
-                <div class="date-card">
-                    <div class="date-label">🌙 رمضان 2026</div>
-                    <div class="date-value" id="ramadan-left">--</div>
-                    <div class="date-unit">يوم</div>
-                </div>
+            <div class="date-main" id="full-date">الخميس 26 فبراير 2026</div>
+            <div class="date-details">
+                <span id="hijri-date">19 شعبان 1447 هـ</span>
+            </div>
+            <div class="ramadan-countdown">
+                <span>🌙 رمضان 2026</span>
+                <span class="countdown-number" id="ramadan-days">--</span>
+                <span>يوم</span>
             </div>
         </div>
 
-        <!-- مواقيت الصلاة بتوقيت 24 ساعة -->
-        <div class="info-card mb-4">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-sm font-bold text-[#d4af37]">🕌 مواقيت الصلاة</h2>
-                <span class="text-[10px] bg-black/50 px-2 py-1 rounded-full">24 ساعة</span>
-            </div>
+        <!-- مواقيت الصلاة - تنسيق 12 ساعة -->
+        <div class="bg-[#111] p-4 rounded-2xl border border-[#d4af3722] mb-4">
+            <h2 class="text-[#d4af37] font-bold mb-3 text-right">🕌 مواقيت الصلاة</h2>
             
             <div class="prayer-item">
                 <span class="prayer-name">🌅 الفجر</span>
-                <span class="prayer-time" id="fajr-time" dir="ltr">04:18</span>
+                <span class="prayer-time" id="fajr-time">04:18 ص</span>
             </div>
             <div class="prayer-item">
                 <span class="prayer-name">☀️ الظهر</span>
-                <span class="prayer-time" id="dhuhr-time" dir="ltr">11:58</span>
+                <span class="prayer-time" id="dhuhr-time">11:58 ص</span>
             </div>
             <div class="prayer-item">
                 <span class="prayer-name">⛅ العصر</span>
-                <span class="prayer-time" id="asr-time" dir="ltr">15:28</span>
+                <span class="prayer-time" id="asr-time">03:28 م</span>
             </div>
             <div class="prayer-item">
                 <span class="prayer-name">🌇 المغرب</span>
-                <span class="prayer-time" id="maghrib-time" dir="ltr">17:48</span>
+                <span class="prayer-time" id="maghrib-time">05:48 م</span>
             </div>
             <div class="prayer-item">
                 <span class="prayer-name">🌙 العشاء</span>
-                <span class="prayer-time" id="isha-time" dir="ltr">19:18</span>
+                <span class="prayer-time" id="isha-time">07:18 م</span>
             </div>
         </div>
 
         <!-- الذكر الحالي -->
         <div class="mb-4">
-            <p id="dhikr-display" class="text-3xl font-black text-white bg-gradient-to-r from-[#d4af37] to-[#f9e076] bg-clip-text text-transparent">سبحان الله</p>
+            <p id="dhikr-display" class="text-3xl font-black text-white">سبحان الله</p>
         </div>
 
         <!-- دائرة التسبيح -->
-        <div class="ring-container">
-            <div id="main-tap" class="tasbih-circle" role="button" aria-label="اضغط للتسبيح">
-                <span id="counter" class="text-8xl font-black tracking-tighter text-white drop-shadow-lg">0</span>
-                <span class="text-[11px] text-[#d4af37] mt-3 tracking-widest uppercase font-bold border-t border-[#d4af3733] pt-2 w-4/5">➕ اضغط</span>
-            </div>
+        <div class="tasbih-circle" id="main-tap">
+            <span id="counter" class="text-8xl font-black text-white">0</span>
+            <span class="text-xs text-[#d4af37] mt-2">➕ اضغط للتسبيح</span>
         </div>
 
         <!-- الإحصائيات -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-[#111] p-4 rounded-2xl border border-[#d4af3722]">
-                <span class="block text-[10px] text-gray-500 mb-1">📊 الإجمالي</span>
-                <span id="total-count" class="text-2xl font-black text-[#d4af37]">0</span>
+        <div class="grid grid-cols-2 gap-4 my-4">
+            <div class="bg-[#111] p-4 rounded-2xl">
+                <span class="text-xs text-gray-500">📊 الإجمالي</span>
+                <span id="total-count" class="block text-2xl font-bold text-[#d4af37]">0</span>
             </div>
-            <div class="bg-[#111] p-4 rounded-2xl border border-[#d4af3722]">
-                <span class="block text-[10px] text-gray-500 mb-1">🔄 الختمات</span>
-                <span id="laps-count" class="text-2xl font-black text-white">0</span>
+            <div class="bg-[#111] p-4 rounded-2xl">
+                <span class="text-xs text-gray-500">🔄 الختمات</span>
+                <span id="laps-count" class="block text-2xl font-bold text-white">0</span>
             </div>
         </div>
 
         <!-- أزرار التحكم -->
         <div class="flex flex-col gap-3">
-            <button onclick="changeDhikr()" class="control-btn hover:border-[#d4af37] transition-all">
-                🔄 الذكر التالي
-            </button>
+            <button onclick="changeDhikr()" class="control-btn">🔄 الذكر التالي</button>
             
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="resetCounter()" class="control-btn bg-red-950/30 border-red-900/50 text-red-400">
-                    🔄 تصفير
-                </button>
-                <button onclick="toggleSound()" id="sound-toggle" class="control-btn bg-[#d4af3710] border-[#d4af3750] text-[#d4af37]">
-                    🔊 صوت: ON
-                </button>
+                <button onclick="resetCounter()" class="control-btn text-red-400">🔄 تصفير</button>
+                <button onclick="toggleSound()" id="sound-toggle" class="control-btn text-[#d4af37]">🔊 صوت: ON</button>
             </div>
 
             <!-- زر تفعيل الإشعارات -->
-            <button id="notif-btn" onclick="setupNotifications()" class="mt-2 text-sm font-bold text-white bg-gradient-to-r from-[#b8860b] to-[#d4af37] p-4 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all">
+            <button onclick="setupNotifications()" class="bg-gradient-to-r from-[#b8860b] to-[#d4af37] text-white p-4 rounded-xl font-bold">
                 🔔 تفعيل إشعارات الصلوات
             </button>
 
-            <!-- زر تجربة الإشعار -->
+            <!-- زر تجربة الإشعار المحسن -->
             <button onclick="testNotification()" class="test-notif-btn">
-                🧪 تجربة الإشعار (اختبر إذا كان يعمل)
+                📱 اضغط هنا لتجربة الإشعار
+                <span class="block text-xs opacity-70">(ستصلك رسالة تجريبية)</span>
             </button>
             
-            <div id="notif-status" class="text-xs text-center text-[#d4af37] bg-black/50 p-3 rounded-lg hidden mt-2">
-                ✅ الإشعارات مفعلة - ستصلك قبل كل صلاة
-            </div>
+            <!-- حالة الإشعارات -->
+            <div id="notif-status" class="hidden"></div>
         </div>
     </div>
 
     <!-- المؤثرات الصوتية -->
-    <audio id="click-sfx" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
-    </audio>
-    
-    <audio id="complete-sfx" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="click-sfx" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="complete-sfx" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
 
     <script>
         (function() {
-            'use strict';
-            
             // ==================== المتغيرات ====================
             let count = 0;
             let total = parseInt(localStorage.getItem('tasbih_total')) || 0;
             let isSoundOn = localStorage.getItem('sound_enabled') !== 'false';
-            let notificationsEnabled = false;
             
-            const dhikrs = [
-                "سبحان الله",
-                "الحمد لله", 
-                "لا إله إلا الله",
-                "الله أكبر",
-                "أستغفر الله",
-                "اللهم صلِّ على محمد"
-            ];
+            const dhikrs = ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "أستغفر الله", "اللهم صلِّ على محمد"];
             let dhikrIdx = parseInt(localStorage.getItem('current_dhikr')) || 0;
 
             // ==================== عناصر DOM ====================
@@ -378,14 +329,12 @@
                 laps: document.getElementById('laps-count'),
                 dhikrDisplay: document.getElementById('dhikr-display'),
                 soundToggle: document.getElementById('sound-toggle'),
-                notifBtn: document.getElementById('notif-btn'),
                 notifStatus: document.getElementById('notif-status'),
                 clickSfx: document.getElementById('click-sfx'),
                 completeSfx: document.getElementById('complete-sfx'),
-                gregorianDay: document.getElementById('gregorian-day'),
-                gregorianMonth: document.getElementById('gregorian-month'),
+                fullDate: document.getElementById('full-date'),
                 hijriDate: document.getElementById('hijri-date'),
-                ramadanLeft: document.getElementById('ramadan-left'),
+                ramadanDays: document.getElementById('ramadan-days'),
                 prayerTimes: {
                     fajr: document.getElementById('fajr-time'),
                     dhuhr: document.getElementById('dhuhr-time'),
@@ -399,157 +348,117 @@
             function updateDate() {
                 const now = new Date();
                 
-                // اليوم والميلادي
-                const day = now.getDate();
-                const month = now.toLocaleDateString('ar-EG', { month: 'long' });
-                elements.gregorianDay.innerText = day;
-                elements.gregorianMonth.innerText = month;
+                // الأيام بالعربية
+                const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
                 
-                // رمضان 2026 (18 فبراير 2026)
+                const dayName = days[now.getDay()];
+                const day = now.getDate();
+                const month = months[now.getMonth()];
+                const year = now.getFullYear();
+                
+                elements.fullDate.innerText = `${dayName} ${day} ${month} ${year}`;
+                
+                // تاريخ هجري تقريبي
+                const hijriMonth = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+                const hijriDay = Math.floor((day % 30) + 10) % 30 || 1;
+                const hijriMonthIndex = 7; // شعبان تقريباً
+                
+                elements.hijriDate.innerText = `${hijriDay} ${hijriMonth[hijriMonthIndex]} 1447 هـ`;
+                
+                // العد التنازلي لرمضان
                 const ramadan2026 = new Date(2026, 1, 18); // 18 فبراير 2026
                 const diffTime = ramadan2026 - now;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 
                 if (diffDays > 0) {
-                    elements.ramadanLeft.innerText = diffDays;
+                    elements.ramadanDays.innerText = diffDays;
                 } else if (diffDays === 0) {
-                    elements.ramadanLeft.innerText = 'اليوم';
+                    elements.ramadanDays.innerText = 'اليوم';
                 } else {
-                    elements.ramadanLeft.innerText = 'بدأ';
+                    elements.ramadanDays.innerText = 'بدأ';
                 }
-                
-                // تاريخ هجري تقريبي
-                const hijriMonth = 'شعبان';
-                const hijriDay = Math.floor((day % 30) + 15) % 30 || 1;
-                elements.hijriDate.innerText = `${hijriDay} ${hijriMonth} 1447 هـ`;
             }
 
-            // ==================== تحديث الواجهة ====================
-            function refreshUI() {
-                elements.counter.innerText = count;
-                elements.total.innerText = total.toLocaleString();
-                elements.laps.innerText = Math.floor(total / 33);
-                localStorage.setItem('tasbih_total', total);
-                localStorage.setItem('current_dhikr', dhikrIdx);
-                localStorage.setItem('sound_enabled', isSoundOn);
-            }
-
-            // ==================== نظام الصوت ====================
-            function playSound(type = 'click') {
-                if (!isSoundOn) return;
-                try {
-                    const audio = type === 'complete' ? elements.completeSfx : elements.clickSfx;
-                    audio.currentTime = 0;
-                    audio.play().catch(e => console.log('صوت مؤقت:', e));
-                } catch (e) {}
-            }
-
-            window.toggleSound = function() {
-                isSoundOn = !isSoundOn;
-                elements.soundToggle.innerHTML = isSoundOn ? '🔊 صوت: ON' : '🔇 صوت: OFF';
-                localStorage.setItem('sound_enabled', isSoundOn);
-            };
-
-            // ==================== نظام التسبيح ====================
-            elements.mainBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                count++;
-                total++;
-                
-                if ("vibrate" in navigator) navigator.vibrate(30);
-                playSound('click');
-                
-                if (count % 33 === 0) {
-                    elements.mainBtn.classList.add('gold-glow');
-                    playSound('complete');
-                    if ("vibrate" in navigator) navigator.vibrate([50, 50, 50]);
-                    setTimeout(() => elements.mainBtn.classList.remove('gold-glow'), 400);
-                }
-                
-                refreshUI();
-            });
-
-            window.changeDhikr = function() {
-                dhikrIdx = (dhikrIdx + 1) % dhikrs.length;
-                elements.dhikrDisplay.innerText = dhikrs[dhikrIdx];
-                count = 0;
-                refreshUI();
-                playSound('click');
-            };
-
-            window.resetCounter = function() {
-                if (confirm('⚠️ هل أنت متأكد من تصفير جميع الأعداد؟')) {
-                    count = 0;
-                    total = 0;
-                    refreshUI();
-                    playSound('click');
-                }
-            };
-
-            // ==================== جلب مواقيت الصلاة (24 ساعة) ====================
+            // ==================== جلب مواقيت الصلاة (12 ساعة) ====================
             async function fetchPrayerTimes() {
                 try {
                     const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5');
                     const data = await response.json();
                     const timings = data.data.timings;
                     
-                    // عرض بتوقيت 24 ساعة مباشرة
-                    elements.prayerTimes.fajr.innerText = timings.Fajr;
-                    elements.prayerTimes.dhuhr.innerText = timings.Dhuhr;
-                    elements.prayerTimes.asr.innerText = timings.Asr;
-                    elements.prayerTimes.maghrib.innerText = timings.Maghrib;
-                    elements.prayerTimes.isha.innerText = timings.Isha;
+                    // تحويل إلى تنسيق 12 ساعة
+                    function to12Hour(time) {
+                        const [hours, minutes] = time.split(':');
+                        const h = parseInt(hours);
+                        const period = h >= 12 ? 'م' : 'ص';
+                        const hour12 = h % 12 || 12;
+                        return `${hour12.toString().padStart(2, '0')}:${minutes} ${period}`;
+                    }
                     
-                    return timings;
+                    elements.prayerTimes.fajr.innerText = to12Hour(timings.Fajr);
+                    elements.prayerTimes.dhuhr.innerText = to12Hour(timings.Dhuhr);
+                    elements.prayerTimes.asr.innerText = to12Hour(timings.Asr);
+                    elements.prayerTimes.maghrib.innerText = to12Hour(timings.Maghrib);
+                    elements.prayerTimes.isha.innerText = to12Hour(timings.Isha);
+                    
                 } catch (error) {
-                    console.error('خطأ في جلب المواقيت:', error);
-                    // بيانات احتياطية
-                    const fallback = {
-                        Fajr: '04:18',
-                        Dhuhr: '11:58',
-                        Asr: '15:28',
-                        Maghrib: '17:48',
-                        Isha: '19:18'
-                    };
-                    
-                    elements.prayerTimes.fajr.innerText = fallback.Fajr;
-                    elements.prayerTimes.dhuhr.innerText = fallback.Dhuhr;
-                    elements.prayerTimes.asr.innerText = fallback.Asr;
-                    elements.prayerTimes.maghrib.innerText = fallback.Maghrib;
-                    elements.prayerTimes.isha.innerText = fallback.Isha;
-                    
-                    return fallback;
+                    console.log('خطأ في جلب المواقيت، استخدام بيانات افتراضية');
+                    // بيانات افتراضية
+                    elements.prayerTimes.fajr.innerText = '04:18 ص';
+                    elements.prayerTimes.dhuhr.innerText = '11:58 ص';
+                    elements.prayerTimes.asr.innerText = '03:28 م';
+                    elements.prayerTimes.maghrib.innerText = '05:48 م';
+                    elements.prayerTimes.isha.innerText = '07:18 م';
                 }
             }
 
-            // ==================== تجربة الإشعار ====================
-            window.testNotification = async function() {
+            // ==================== تجربة الإشعار المحسنة ====================
+            window.testNotification = function() {
+                elements.notifStatus.classList.remove('hidden', 'notif-success', 'notif-error');
+                
+                // التحقق من إذن الإشعارات
                 if (Notification.permission !== 'granted') {
-                    alert('⚠️ يجب تفعيل الإشعارات أولاً');
+                    elements.notifStatus.className = 'notif-error';
+                    elements.notifStatus.innerText = '❌ الإشعارات غير مفعلة - اضغط على "تفعيل الإشعارات" أولاً';
                     return;
                 }
                 
                 try {
-                    // إشعار تجريبي
-                    new Notification('🧪 تجربة الإشعار', {
-                        body: 'إذا رأيت هذه الرسالة، فالإشعارات تعمل بنجاح ✅',
+                    // إنشاء إشعار تجريبي مع خيارات متعددة
+                    const notification = new Notification('🧪 تجربة الإشعار', {
+                        body: '✅ الإشعارات تعمل بنجاح! هذه رسالة تجريبية',
                         icon: 'https://cdn-icons-png.flaticon.com/512/2319/2319833.png',
+                        badge: 'https://cdn-icons-png.flaticon.com/512/2319/2319833.png',
                         vibrate: [200, 100, 200],
                         requireInteraction: true,
-                        tag: 'test-notification'
+                        silent: false,
+                        tag: 'test-' + Date.now()
                     });
                     
-                    // تشغيل صوت واهتزاز
-                    playSound('complete');
+                    // تشغيل الصوت والاهتزاز
+                    if (isSoundOn) {
+                        elements.completeSfx.currentTime = 0;
+                        elements.completeSfx.play().catch(() => {});
+                    }
+                    
                     if ("vibrate" in navigator) {
                         navigator.vibrate([200, 100, 200]);
                     }
                     
-                    alert('✅ تم إرسال إشعار تجريبي - تحقق من شاشة الإشعارات');
+                    // عرض رسالة نجاح
+                    elements.notifStatus.className = 'notif-success';
+                    elements.notifStatus.innerText = '✅ تم إرسال الإشعار بنجاح! تحقق من شاشة القفل';
+                    
+                    // إغلاق الرسالة بعد 3 ثواني
+                    setTimeout(() => {
+                        elements.notifStatus.classList.add('hidden');
+                    }, 3000);
                     
                 } catch (error) {
-                    console.error('خطأ في تجربة الإشعار:', error);
-                    alert('❌ فشل في إرسال الإشعار التجريبي');
+                    console.error('خطأ في الإشعار:', error);
+                    elements.notifStatus.className = 'notif-error';
+                    elements.notifStatus.innerText = '❌ فشل في إرسال الإشعار - ' + error.message;
                 }
             };
 
@@ -559,63 +468,83 @@
                     const permission = await Notification.requestPermission();
                     
                     if (permission === 'granted') {
-                        notificationsEnabled = true;
+                        elements.notifStatus.className = 'notif-success';
+                        elements.notifStatus.innerText = '✅ تم تفعيل الإشعارات بنجاح! اضغط على "تجربة الإشعار" للتأكد';
+                        elements.notifStatus.classList.remove('hidden');
                         
                         // تفعيل OneSignal
                         if (window.OneSignal) {
                             OneSignal.push(function() {
-                                OneSignal.showSlidedownPrompt();
                                 OneSignal.setSubscription(true);
                             });
                         }
                         
-                        // تحديث الواجهة
-                        elements.notifBtn.classList.add('notif-active');
-                        elements.notifBtn.innerHTML = '✅ الإشعارات مفعلة';
-                        elements.notifStatus.classList.remove('hidden');
-                        
                         // إشعار ترحيبي
-                        new Notification('🌙 تم التفعيل بنجاح', {
-                            body: 'ستصلك إشعارات قبل كل صلاة',
+                        new Notification('🌙 مرحباً بك', {
+                            body: 'تم تفعيل الإشعارات بنجاح، ستصلک تذكيرات الصلوات',
                             icon: 'https://cdn-icons-png.flaticon.com/512/2319/2319833.png'
                         });
                         
-                        // تجربة تلقائية
-                        setTimeout(() => testNotification(), 1000);
-                        
                     } else {
-                        alert('⚠️ يجب السماح بالإشعارات من الإعدادات');
+                        elements.notifStatus.className = 'notif-error';
+                        elements.notifStatus.innerText = '❌ لم يتم تفعيل الإشعارات - الرجاء السماح من الإعدادات';
+                        elements.notifStatus.classList.remove('hidden');
                     }
                 } catch (error) {
                     console.error('خطأ:', error);
                 }
             };
 
-            // ==================== التهيئة ====================
-            async function init() {
-                // تحديث البيانات
+            // ==================== باقي الدوال ====================
+            function refreshUI() {
+                elements.counter.innerText = count;
+                elements.total.innerText = total;
+                elements.laps.innerText = Math.floor(total / 33);
+                localStorage.setItem('tasbih_total', total);
+            }
+
+            elements.mainBtn.addEventListener('click', () => {
+                count++;
+                total++;
+                if (isSoundOn) elements.clickSfx.play().catch(() => {});
+                if ("vibrate" in navigator) navigator.vibrate(30);
+                refreshUI();
+            });
+
+            window.changeDhikr = function() {
+                dhikrIdx = (dhikrIdx + 1) % dhikrs.length;
+                elements.dhikrDisplay.innerText = dhikrs[dhikrIdx];
                 count = 0;
                 refreshUI();
+            };
+
+            window.resetCounter = function() {
+                if (confirm('هل أنت متأكد؟')) {
+                    count = 0;
+                    total = 0;
+                    refreshUI();
+                }
+            };
+
+            window.toggleSound = function() {
+                isSoundOn = !isSoundOn;
+                elements.soundToggle.innerText = isSoundOn ? '🔊 صوت: ON' : '🔇 صوت: OFF';
+                localStorage.setItem('sound_enabled', isSoundOn);
+            };
+
+            // ==================== التهيئة ====================
+            function init() {
+                refreshUI();
                 elements.dhikrDisplay.innerText = dhikrs[dhikrIdx];
-                elements.soundToggle.innerHTML = isSoundOn ? '🔊 صوت: ON' : '🔇 صوت: OFF';
-                
-                // تحديث التاريخ
+                elements.soundToggle.innerText = isSoundOn ? '🔊 صوت: ON' : '🔇 صوت: OFF';
                 updateDate();
-                
-                // جلب المواقيت
-                await fetchPrayerTimes();
+                fetchPrayerTimes();
                 
                 // تحديث كل دقيقة
-                setInterval(() => {
-                    updateDate();
-                }, 60000);
-                
-                // تحديث المواقيت كل ساعة
-                setInterval(fetchPrayerTimes, 3600000);
+                setInterval(updateDate, 60000);
             }
 
             init();
-            
         })();
     </script>
 </body>
