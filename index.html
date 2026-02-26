@@ -118,6 +118,12 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            transition: all 0.2s;
+        }
+        
+        .tasbih-circle:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 50px #d4af37;
         }
         
         .counter {
@@ -137,6 +143,12 @@
             width: 100%;
             margin-bottom: 12px;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+            background: #2a2a2a;
         }
         
         .btn-gold {
@@ -159,15 +171,16 @@
             margin-top: 16px;
             display: none;
             text-align: center;
+            border: 2px solid;
         }
         
         .success {
-            border: 2px solid #22c55e;
+            border-color: #22c55e;
             color: #22c55e;
         }
         
         .error {
-            border: 2px solid #ef4444;
+            border-color: #ef4444;
             color: #ef4444;
         }
         
@@ -183,6 +196,7 @@
             border-radius: 20px;
             padding: 16px;
             text-align: center;
+            border: 1px solid #d4af3722;
         }
         
         .stat-value {
@@ -195,24 +209,33 @@
             color: #666;
             font-size: 12px;
         }
+
+        .service-worker-status {
+            font-size: 10px;
+            color: #d4af37;
+            margin-top: 10px;
+            padding: 5px;
+            background: #00000040;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- التاريخ الحقيقي (ثابت لأن API لا تعمل بدون HTTPS) -->
+    <!-- التاريخ -->
     <div class="date-box">
         <div class="hijri">26 شعبان 1447 هـ</div>
         <div class="gregorian">الخميس 26 فبراير 2026</div>
     </div>
     
-    <!-- عداد رمضان الحقيقي -->
+    <!-- عداد رمضان -->
     <div class="ramadan-counter">
         <span class="counter-label">🌙 رمضان 2026</span>
         <span class="counter-number" id="ramadanDays">358</span>
     </div>
     
-    <!-- مواقيت الصلاة الثابتة (القاهرة) -->
+    <!-- مواقيت الصلاة -->
     <div class="prayer-card">
         <div class="prayer-row">
             <span class="prayer-name">🌅 الفجر</span>
@@ -268,27 +291,32 @@
         <button class="btn" id="soundBtn" onclick="toggleSound()">🔊 صوت: ON</button>
     </div>
     
-    <!-- الإشعارات الحقيقية (تعمل على المتصفحات الحديثة) -->
-    <button class="btn btn-gold" onclick="enableNotifications()">
-        🔔 تفعيل الإشعارات الحقيقية
+    <!-- زر تفعيل Service Worker والإشعارات -->
+    <button class="btn btn-gold" onclick="setupServiceWorkerAndNotifications()">
+        🔔 تفعيل الإشعارات (طريقة صحيحة)
     </button>
     
-    <button class="btn btn-test" onclick="testRealNotification()">
-        📱 تجربة الإشعار الفوري
+    <!-- زر تجربة الإشعار عبر Service Worker -->
+    <button class="btn btn-test" onclick="testNotificationWithSW()" id="testNotifBtn" disabled>
+        📱 تجربة الإشعار (فعّل الإشعارات أولاً)
     </button>
     
-    <!-- حالة الإشعارات -->
+    <!-- حالة الخدمة -->
     <div id="statusMessage" class="status-box"></div>
+    
+    <!-- حالة Service Worker -->
+    <div class="service-worker-status" id="swStatus">
+        ⏳ جاري تحميل Service Worker...
+    </div>
 </div>
 
 <script>
-// ==================== البيانات الحقيقية المحفوظة ====================
-
-// تهيئة المتغيرات
+// ==================== المتغيرات الأساسية ====================
 let currentCount = 0;
 let totalCount = parseInt(localStorage.getItem('totalTasbih')) || 0;
 let soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
 let currentDhikr = parseInt(localStorage.getItem('currentDhikr')) || 0;
+let swRegistration = null;
 
 const dhikrList = [
     "سبحان الله",
@@ -306,14 +334,179 @@ const khatmatEl = document.getElementById('khatmatCount');
 const dhikrEl = document.getElementById('dhikrText');
 const soundBtn = document.getElementById('soundBtn');
 const statusMsg = document.getElementById('statusMessage');
+const swStatus = document.getElementById('swStatus');
+const testNotifBtn = document.getElementById('testNotifBtn');
 
-// ==================== التحديث ====================
+// ==================== إنشاء Service Worker يدوياً ====================
+async function registerServiceWorker() {
+    if (!('serviceWorker' in navigator) || !('Notification' in window) || !('PushManager' in window)) {
+        swStatus.textContent = '❌ المتصفح لا يدعم الإشعارات';
+        swStatus.style.color = '#ef4444';
+        return false;
+    }
+    
+    try {
+        // إنشاء Service Worker بسيط
+        const swCode = `
+            self.addEventListener('install', (event) => {
+                self.skipWaiting();
+            });
+            
+            self.addEventListener('activate', (event) => {
+                event.waitUntil(clients.claim());
+            });
+            
+            self.addEventListener('push', (event) => {
+                const data = event.data?.json() ?? {
+                    title: '🔔 تذكير',
+                    body: 'موعد الصلاة',
+                    icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23d4af37\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'black\'%3E🌙%3C/text%3E%3C/svg%3E'
+                };
+                
+                event.waitUntil(
+                    self.registration.showNotification(data.title, {
+                        body: data.body,
+                        icon: data.icon,
+                        vibrate: [200, 100, 200],
+                        requireInteraction: true
+                    })
+                );
+            });
+            
+            self.addEventListener('notificationclick', (event) => {
+                event.notification.close();
+                event.waitUntil(clients.openWindow('/'));
+            });
+        `;
+        
+        // إنشاء Blob من كود Service Worker
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+        
+        // تسجيل Service Worker
+        const registration = await navigator.serviceWorker.register(swUrl, {
+            scope: '/'
+        });
+        
+        swRegistration = registration;
+        
+        swStatus.textContent = '✅ Service Worker نشط وجاهز';
+        swStatus.style.color = '#22c55e';
+        
+        console.log('✅ Service Worker مسجل:', registration);
+        return registration;
+        
+    } catch (error) {
+        console.error('❌ خطأ في تسجيل Service Worker:', error);
+        swStatus.textContent = '❌ فشل تسجيل Service Worker';
+        swStatus.style.color = '#ef4444';
+        return false;
+    }
+}
+
+// ==================== تفعيل الإشعارات بالطريقة الصحيحة ====================
+async function setupServiceWorkerAndNotifications() {
+    statusMsg.style.display = 'block';
+    
+    try {
+        // 1. طلب إذن الإشعارات
+        const permission = await Notification.requestPermission();
+        
+        if (permission !== 'granted') {
+            statusMsg.className = 'status-box error';
+            statusMsg.textContent = '❌ يجب السماح بالإشعارات أولاً';
+            return;
+        }
+        
+        // 2. تسجيل Service Worker
+        const registration = await registerServiceWorker();
+        
+        if (!registration) {
+            statusMsg.className = 'status-box error';
+            statusMsg.textContent = '❌ فشل تفعيل Service Worker';
+            return;
+        }
+        
+        // 3. تفعيل زر التجربة
+        testNotifBtn.disabled = false;
+        testNotifBtn.textContent = '📱 تجربة الإشعار (الآن)';
+        
+        // 4. إرسال إشعار ترحيبي عبر Service Worker
+        await registration.showNotification('🌙 مرحباً بك', {
+            body: 'الإشعارات مفعلة بالطريقة الصحيحة ✓',
+            icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%2322c55e\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'white\'%3E✅%3C/text%3E%3C/svg%3E',
+            vibrate: [200, 100, 200]
+        });
+        
+        statusMsg.className = 'status-box success';
+        statusMsg.textContent = '✅ تم تفعيل الإشعارات بنجاح!';
+        
+        setTimeout(() => {
+            statusMsg.style.display = 'none';
+        }, 3000);
+        
+    } catch (error) {
+        console.error('❌ خطأ:', error);
+        statusMsg.className = 'status-box error';
+        statusMsg.textContent = '❌ خطأ: ' + error.message;
+    }
+}
+
+// ==================== تجربة الإشعار عبر Service Worker ====================
+async function testNotificationWithSW() {
+    statusMsg.style.display = 'block';
+    
+    if (!swRegistration) {
+        statusMsg.className = 'status-box error';
+        statusMsg.textContent = '❌ Service Worker غير مفعل. اضغط على "تفعيل الإشعارات" أولاً';
+        return;
+    }
+    
+    try {
+        // إرسال إشعار عبر Service Worker (الطريقة الصحيحة)
+        await swRegistration.showNotification('🧪 تجربة ناجحة', {
+            body: 'الإشعارات تعمل بالطريقة الصحيحة عبر Service Worker ✅',
+            icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23d4af37\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'black\'%3E🌙%3C/text%3E%3C/svg%3E',
+            vibrate: [300, 100, 300],
+            requireInteraction: true,
+            actions: [
+                { action: 'open', title: 'فتح التطبيق' },
+                { action: 'close', title: 'إغلاق' }
+            ]
+        });
+        
+        // تشغيل صوت
+        if (soundEnabled) {
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVAAAAA8Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pw==');
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+        
+        // اهتزاز
+        if ('vibrate' in navigator) {
+            navigator.vibrate([300, 100, 300]);
+        }
+        
+        statusMsg.className = 'status-box success';
+        statusMsg.textContent = '✅ تم إرسال الإشعار عبر Service Worker';
+        
+        setTimeout(() => {
+            statusMsg.style.display = 'none';
+        }, 3000);
+        
+    } catch (error) {
+        console.error('❌ خطأ:', error);
+        statusMsg.className = 'status-box error';
+        statusMsg.textContent = '❌ خطأ: ' + error.message;
+    }
+}
+
+// ==================== تحديث الواجهة ====================
 function updateDisplay() {
     counterEl.textContent = currentCount;
     totalEl.textContent = totalCount;
     khatmatEl.textContent = Math.floor(totalCount / 33);
-    
-    // حفظ في localStorage
     localStorage.setItem('totalTasbih', totalCount);
     localStorage.setItem('currentDhikr', currentDhikr);
 }
@@ -323,7 +516,6 @@ document.getElementById('tasbihBtn').addEventListener('click', function() {
     currentCount++;
     totalCount++;
     
-    // صوت
     if (soundEnabled) {
         try {
             const audio = new Audio('data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVAAAAA8Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pw==');
@@ -331,18 +523,15 @@ document.getElementById('tasbihBtn').addEventListener('click', function() {
         } catch (e) {}
     }
     
-    // اهتزاز
     if ('vibrate' in navigator) {
         navigator.vibrate(20);
     }
     
-    // تأثير 33
     if (currentCount % 33 === 0) {
         if ('vibrate' in navigator) {
             navigator.vibrate([50, 50, 50]);
         }
         
-        // تأثير بصري
         document.querySelector('.tasbih-circle').style.boxShadow = '0 0 60px #d4af37';
         setTimeout(() => {
             document.querySelector('.tasbih-circle').style.boxShadow = '0 10px 30px rgba(212, 175, 55, 0.2)';
@@ -376,94 +565,10 @@ function toggleSound() {
     localStorage.setItem('soundEnabled', soundEnabled);
 }
 
-// ==================== الإشعارات الحقيقية (تعمل بدون إنترنت) ====================
-async function enableNotifications() {
-    statusMsg.style.display = 'block';
-    
-    if (!('Notification' in window)) {
-        statusMsg.className = 'status-box error';
-        statusMsg.textContent = '❌ المتصفح لا يدعم الإشعارات';
-        return;
-    }
-    
-    try {
-        const permission = await Notification.requestPermission();
-        
-        if (permission === 'granted') {
-            statusMsg.className = 'status-box success';
-            statusMsg.textContent = '✅ تم تفعيل الإشعارات بنجاح';
-            
-            // إشعار ترحيبي
-            new Notification('🌙 مرحباً بك', {
-                body: 'الإشعارات مفعلة الآن',
-                icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23d4af37\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'black\'%3E🌙%3C/text%3E%3C/svg%3E'
-            });
-            
-            setTimeout(() => {
-                statusMsg.style.display = 'none';
-            }, 3000);
-        } else {
-            statusMsg.className = 'status-box error';
-            statusMsg.textContent = '❌ تم رفض الإشعارات';
-        }
-    } catch (error) {
-        statusMsg.className = 'status-box error';
-        statusMsg.textContent = '❌ خطأ: ' + error.message;
-    }
-}
-
-// ==================== تجربة الإشعار الفوري ====================
-function testRealNotification() {
-    statusMsg.style.display = 'block';
-    
-    if (Notification.permission !== 'granted') {
-        statusMsg.className = 'status-box error';
-        statusMsg.textContent = '❌ الإشعارات غير مفعلة. اضغط على "تفعيل الإشعارات" أولاً';
-        return;
-    }
-    
-    try {
-        // إشعار حقيقي
-        const notification = new Notification('🧪 تجربة ناجحة', {
-            body: 'الإشعارات تعمل بشكل حقيقي 100% ✅',
-            icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%2322c55e\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'60\' text-anchor=\'middle\' fill=\'white\'%3E✅%3C/text%3E%3C/svg%3E',
-            vibrate: [200, 100, 200]
-        });
-        
-        notification.onclick = function() {
-            window.focus();
-            notification.close();
-        };
-        
-        statusMsg.className = 'status-box success';
-        statusMsg.textContent = '✅ تم إرسال الإشعار بنجاح';
-        
-        // صوت واهتزاز
-        if (soundEnabled) {
-            try {
-                const audio = new Audio('data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVAAAAA8Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pzw/PD88Pw==');
-                audio.play().catch(() => {});
-            } catch (e) {}
-        }
-        
-        if ('vibrate' in navigator) {
-            navigator.vibrate([200, 100, 200]);
-        }
-        
-        setTimeout(() => {
-            statusMsg.style.display = 'none';
-        }, 3000);
-        
-    } catch (error) {
-        statusMsg.className = 'status-box error';
-        statusMsg.textContent = '❌ خطأ: ' + error.message;
-    }
-}
-
-// ==================== عداد رمضان الحقيقي ====================
+// ==================== عداد رمضان ====================
 function updateRamadanCounter() {
     const today = new Date();
-    const ramadan2026 = new Date(2026, 1, 18); // 18 فبراير 2026
+    const ramadan2026 = new Date(2026, 1, 18);
     const diff = Math.ceil((ramadan2026 - today) / (1000 * 60 * 60 * 24));
     document.getElementById('ramadanDays').textContent = diff > 0 ? diff : 'اليوم';
 }
@@ -474,9 +579,15 @@ updateRamadanCounter();
 soundBtn.textContent = soundEnabled ? '🔊 صوت: ON' : '🔇 صوت: OFF';
 dhikrEl.textContent = dhikrList[currentDhikr];
 
-// تحديث عداد رمضان كل يوم
+// محاولة تسجيل Service Worker تلقائياً عند تحميل الصفحة
+registerServiceWorker().then(registration => {
+    if (registration && Notification.permission === 'granted') {
+        testNotifBtn.disabled = false;
+        testNotifBtn.textContent = '📱 تجربة الإشعار (الآن)';
+    }
+});
+
 setInterval(updateRamadanCounter, 86400000);
 </script>
-
 </body>
 </html>
